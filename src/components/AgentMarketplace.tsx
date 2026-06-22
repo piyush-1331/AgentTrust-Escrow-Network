@@ -227,6 +227,7 @@ export default function AgentMarketplace({
 
     setIsValidating(prev => ({ ...prev, [taskId]: true }));
 
+    try {
       let auditResult;
       try {
         const response = await fetch("/api/validate", {

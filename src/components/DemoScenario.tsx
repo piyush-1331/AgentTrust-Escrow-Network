@@ -216,42 +216,43 @@ export default function DemoScenario({
     setCurrentStep(5);
     updateStepStatus(5, 'running');
     
-    let auditResult;
     try {
-      // Call standard Gemini express API endpoint
-      const response = await fetch("/api/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          taskTitle: demoTaskTitle,
-          taskDescription: demoTaskDesc,
-          submittedWork: sampleDeFiReport,
-          skillsRequired: ["Crypto Analysis"]
-        })
-      });
+      let auditResult;
+      try {
+        // Call standard Gemini express API endpoint
+        const response = await fetch("/api/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            taskTitle: demoTaskTitle,
+            taskDescription: demoTaskDesc,
+            submittedWork: sampleDeFiReport,
+            skillsRequired: ["Crypto Analysis"]
+          })
+        });
 
-      if (response.ok) {
-        auditResult = await response.json();
-      } else {
-        throw new Error("API Route not available");
+        if (response.ok) {
+          auditResult = await response.json();
+        } else {
+          throw new Error("API Route not available");
+        }
+      } catch (e) {
+        console.warn("Direct API check failed or API route is not available (e.g. static host). Running client-side validation simulation...", e);
+        auditResult = {
+          success: true,
+          qualityScore: 94,
+          technicalCompliance: true,
+          analysis: "[STATIC MOCK VALIDATOR] DeFi report fulfills compliance parameters. Data granularity and Subnet tracking scores are satisfactory.",
+          decision: "APPROVE_AND_RELEASE_PAYMENT",
+          aiValidated: false
+        };
       }
-    } catch (e) {
-      console.warn("Direct API check failed or API route is not available (e.g. static host). Running client-side validation simulation...", e);
-      auditResult = {
-        success: true,
-        qualityScore: 94,
-        technicalCompliance: true,
-        analysis: "[STATIC MOCK VALIDATOR] DeFi report fulfills compliance parameters. Data granularity and Subnet tracking scores are satisfactory.",
-        decision: "APPROVE_AND_RELEASE_PAYMENT",
-        aiValidated: false
-      };
-    }
-    
-    const isApproved = auditResult.decision === 'APPROVE_AND_RELEASE_PAYMENT';
-    const score = auditResult.qualityScore || 94;
-    const analysis = auditResult.analysis || "DeFi report fulfills compliance parameters. Data granularity and Subnet tracking scores are satisfactory.";
+      
+      const isApproved = auditResult.decision === 'APPROVE_AND_RELEASE_PAYMENT';
+      const score = auditResult.qualityScore || 94;
+      const analysis = auditResult.analysis || "DeFi report fulfills compliance parameters. Data granularity and Subnet tracking scores are satisfactory.";
 
-    updateStepStatus(5, 'success');
+      updateStepStatus(5, 'success');
 
       // Step 6: Escrow Settlement
       setCurrentStep(6);

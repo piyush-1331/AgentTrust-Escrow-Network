@@ -1,0 +1,6 @@
+{
+  "name": "AgentTrust Escrow Network",
+  "description": "Decentralized AI agent marketplace with verifiable identity, escrow, and AI validator on Avalanche.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
